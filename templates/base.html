@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<head>
+    <title>BLOGLY</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<nav>
+    <a href="/" id="home">Home</a>
+    <a href="/users/new" id="new-user">Add a New User</a>
+</nav>
+<body>
+    {% block contents %}
+    {% endblock %}
+</body>
+
+<script src="http://unpkg.com/jquery"></script>
+<script src="http://unpkg.com/axios/dist/axios.js"></script>
