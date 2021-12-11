@@ -15,12 +15,12 @@ class User (db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
+                   primary_key = True,
+                   autoincrement = True)
     first_name = db.Column(db.String(20),
-                     nullable=False)
+                     nullable = False)
     last_name = db.Column(db.String(20),
-                     nullable=False)
+                     nullable = False)
     image_url = db.Column(db.String())
 
     def __repr__(self):
@@ -37,3 +37,29 @@ class User (db.Model):
         self.first_name = new_first
         self.last_name = new_last
         self.image_url = new_url
+
+class Post (db.Model):
+    """Post class"""
+
+    __tablename__ = "posts"
+
+    id = db.Column(db.Integer,
+                   primary_key = True,
+                   autoincrement = True)
+    title = db.Column(db.String(),
+                        nullable = False)
+    content = db.Column(db.String(),
+                        nullable = False)
+    created_at = db.Column(db.DateTime, default = db.func.current_timestamp())
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('user.id'))
+    user = db.relationship('User', backref = 'posts')
+
+    @classmethod
+    def get_all_user_posts(cls, user_id):
+        return cls.query.filter(Post.user_id == user_id).order_by(Post.created_at.desc()).all()
+
+    def updatePost(self, new_title, new_content):
+        self.title = new_title
+        self.content = new_content
+        self.created_at = db.func.current_timestamp()

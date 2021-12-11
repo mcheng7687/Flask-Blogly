@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block contents%}
+<h1>Edit {{ user.name }} Post</h1>
+<form action="/posts/{{ post.id }}/edit" method="POST">
+    <p>
+        Title:
+    </p>
+    <input type="text" name="title" placeholder="Title" value="{{ post.title }}" required>
+    <p>
+        Post Content:
+    </p>
+    <input type="text" name="content" placeholder="Content" value="{{ post.content }}" required>
+    <br><br><br>
+    <button id="update" type="submit">UPDATE</button>
+</form>
+<br>
+<form action="/users/{{ user.id }}">
+    <button id="cancel" type="submit">CANCEL</button>
+</form>
+<br>
+<form action="/posts/{{ post.id }}/delete" method="POST">
+    <button id="delete" type="submit">DELETE</button>
+</form>
+{% endblock %}

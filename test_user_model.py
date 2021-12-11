@@ -23,17 +23,17 @@ class UserModelTestCase(TestCase):
 
     def test_get_fullname(self):
         """Method to obtain full name using method and property"""
-        user = User(first_name = "Mickey", last_name = "Mouse", image_url = "https://static.wikia.nocookie.net/disney/images/b/bf/Mickey_Mouse_Disney_1.png/revision/latest/scale-to-width-down/270?cb=20180813011713")
+        user = User(first_name = "Mickey", last_name = "Mouse", image_url = "https://static.wikia.nocookie.net/disney/images/b/bf/Mickey_Mouse_Disney_1.png")
 
         self.assertEqual(user.get_fullname(),"Mickey Mouse")
         self.assertEqual(user.full_name,"Mickey Mouse")
     
     def test_updateInfo(self):
         """Method to update personal info including first and last name and image URL"""
-        user = User(first_name = "Minnie", last_name = "Mouse", image_url = "https://static.wikia.nocookie.net/disney/images/3/36/Minnie_Mouse_pose_.jpg/revision/latest?cb=20170709133603")
+        user = User(first_name = "Minnie", last_name = "Mouse", image_url = "https://static.wikia.nocookie.net/disney/images/3/36/Minnie_Mouse_pose_.jpg")
 
-        user.updateInfo("Donald","Duck","https://static.wikia.nocookie.net/disney/images/d/db/Donald_Duck_Iconic.png/revision/latest?cb=20160905174817")
+        user.updateInfo("Donald","Duck","https://static.wikia.nocookie.net/disney/images/d/db/Donald_Duck_Iconic.png")
 
         self.assertEqual(user.first_name,"Donald")
         self.assertEqual(user.last_name,"Duck")
-        self.assertEqual(user.image_url,"https://static.wikia.nocookie.net/disney/images/d/db/Donald_Duck_Iconic.png/revision/latest?cb=20160905174817")
+        self.assertEqual(user.image_url,"https://static.wikia.nocookie.net/disney/images/d/db/Donald_Duck_Iconic.png")
