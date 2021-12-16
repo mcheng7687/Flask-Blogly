@@ -1,7 +1,7 @@
 from app import app
 from unittest import TestCase
 from flask import session
-from models import db, User
+from models import db, User, Post, PostTag, Tag
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_test'
 app.config['SQLALCHEMY_ECHO'] = False
@@ -100,3 +100,20 @@ class BloglyTestCase(TestCase):
 
             self.assertEqual(res.status_code,200)
             self.assertIn('Users:',html)
+
+    def test_new_post(self):
+        """Test new post form"""
+        with app.test_client() as client:
+            res = client.get("/users/2/posts/new")
+            html = res.get_data(as_text = True)       
+
+            self.assertEqual(res.status_code,200)
+            self.assertIn('<h1>Add a New Post</h1>',html)
+
+    def test_add_post(self):
+        with app.test_client() as client:
+            res = client.post("/users/1/posts/new", data={'title':'My BFF', 'content':'Micky is my BFF', 'user_id':'2'}, follow_redirects = True)
+            html = res.get_data(as_text = True)       
+
+            # self.assertEqual(res.status_code,200)
+            # self.assertIn('Goofy Goof',html)

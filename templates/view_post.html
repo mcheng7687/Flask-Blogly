@@ -5,6 +5,11 @@
 <h3>
     {{ post.content }}
 </h3>
+<p>Tags: 
+    {% for tag in tags %}
+        <span class="tag">{{tag.name}}</span>
+    {% endfor %}
+</p>
 <p>By: {{ user.full_name }}</p>
 <p>Created/Modified on {{ post.created_at }}</p>
 <form action="/posts/{{ post.id }}/edit">

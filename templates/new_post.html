@@ -11,7 +11,14 @@
         Post Content:
     </p>
     <input type="text" name="content" placeholder="Content" required>
-    <br><br><br>
+    <br><br>
+    <p>Tags:</p>
+    {% for tag in tags %}
+    <input type="checkbox" name="tags" value="{{tag.id}}">
+    {{tag.name}}
+    <br>
+    {% endfor %}
+    <br>
     <button id="update" type="submit">SUBMIT</button>
 </form>
 <br>

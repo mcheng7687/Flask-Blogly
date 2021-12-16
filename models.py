@@ -53,7 +53,11 @@ class Post (db.Model):
     created_at = db.Column(db.DateTime, default = db.func.current_timestamp())
     user_id = db.Column(db.Integer,
                         db.ForeignKey('user.id'))
-    user = db.relationship('User', backref = 'posts')
+    user = db.relationship('User', 
+                        backref = 'posts')
+    tags = db.relationship('Tag',
+                        secondary = 'post_tag',
+                        backref = 'posts')
 
     @classmethod
     def get_all_user_posts(cls, user_id):
@@ -63,3 +67,32 @@ class Post (db.Model):
         self.title = new_title
         self.content = new_content
         self.created_at = db.func.current_timestamp()
+
+    def __repr__(self):
+        return f"<Post object id={self.id} title={self.title} content={self.content}>"
+
+class Tag (db.Model):
+    """Tag class"""
+
+    __tablename__="tags"
+
+    id = db.Column(db.Integer,
+                primary_key = True,
+                autoincrement = True)
+    name = db.Column(db.String(),
+                    nullable = False)
+
+    def __repr__(self):
+        return f"<Tag object id={self.id} name={self.name}>"
+
+class PostTag (db.Model):
+    """Post/Tag class to join Post and Tag classes"""
+
+    __tablename__ = "post_tag"
+
+    post_id = db.Column(db.Integer,
+            db.ForeignKey('posts.id'),
+            primary_key = True)
+    tag_id = db.Column(db.Integer,
+            db.ForeignKey('tags.id'),            
+            primary_key = True)
