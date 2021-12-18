@@ -7,19 +7,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_test'
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['TESTING'] = True
 
-db.drop_all()
-db.create_all()
-
 
 class BloglyTestCase(TestCase):
     """Test all functions in blogly app.py"""
 
     def setUp(self):
         """Clean up any users in database and add new user"""
-        User.query.delete()
+        db.drop_all()
+        db.create_all()
+
         user = User(id=2, first_name = "Goofy", last_name = "Goof", image_url = "https://static.wikia.nocookie.net/disney/images/2/27/Goofy_transparent.png")
+        post = Post(id=2, title = "Pluto is a dog", content = "He likes to fire hydrants", user_id = 2)
 
         db.session.add(user)
+        db.session.add(post)
         db.session.commit()
 
     def tearDown(self):
@@ -112,8 +113,43 @@ class BloglyTestCase(TestCase):
 
     def test_add_post(self):
         with app.test_client() as client:
-            res = client.post("/users/1/posts/new", data={'title':'My BFF', 'content':'Micky is my BFF', 'user_id':'2'}, follow_redirects = True)
+            res = client.post("/users/2/posts/new", data={'title':'My BFF', 'content':'Micky is my BFF', 'user_id':'2'}, follow_redirects = True)
             html = res.get_data(as_text = True)       
 
-            # self.assertEqual(res.status_code,200)
-            # self.assertIn('Goofy Goof',html)
+            self.assertEqual(res.status_code,200)
+            self.assertIn('My BFF',html)
+
+    def test_view_post(self):
+        with app.test_client() as client:
+            res = client.get("/posts/2")
+            html = res.get_data(as_text = True) 
+
+            self.assertEqual(res.status_code,200)
+            self.assertIn('He likes to fire hydrants\n</h3>',html)
+
+    def test_edit_post(self):
+        with app.test_client() as client:
+            res = client.get("/posts/2/edit")
+            html = res.get_data(as_text = True)
+
+            self.assertEqual(res.status_code,200)
+            self.assertIn('<input type="text" name="content" placeholder="Content" value="He likes to fire hydrants" required>',html)
+
+    def test_edit_post_database(self):
+        with app.test_client() as client:
+            res = client.post("/posts/2/edit", data={'title':'Pluto is a typical dog', 'content':'He hates cats', 'user_id':'2'}, follow_redirects = True)
+            html = res.get_data(as_text = True)
+
+        self.assertEqual(res.status_code,200)
+        self.assertIn('Pluto is a typical dog',html)
+
+    def test_delete_post(self):
+        with app.test_client() as client:
+            res = client.post("/posts/2/delete", data={}, follow_redirects = True)
+            html = res.get_data(as_text = True)
+
+        posts = Post.query.all()
+
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(posts,[])
+        self.assertIn('Full Name: Goofy Goof',html)
